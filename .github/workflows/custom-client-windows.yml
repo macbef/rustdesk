@@ -1,0 +1,30 @@
+name: Custom Windows client (own server)
+
+# Builds the Windows Flutter client with our own ID/relay server and public key
+# baked in, and publishes the installers to the "custom-windows" release of this fork.
+
+on:
+  workflow_dispatch:
+    inputs:
+      rendezvous-server:
+        description: "ID/relay server"
+        type: string
+        default: "graviconnect.de"
+      rs-pub-key:
+        description: "Server public key"
+        type: string
+        default: "U1axPH6dPzDMhqXjn8QeSKpddwY9i6ryXFgia5A5eOc="
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/flutter-build.yml
+    secrets: inherit
+    with:
+      upload-artifact: true
+      upload-tag: "custom-windows"
+      windows-only: true
+      custom-rendezvous-server: ${{ inputs.rendezvous-server }}
+      custom-rs-pub-key: ${{ inputs.rs-pub-key }}
